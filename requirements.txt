@@ -1,0 +1,5 @@
+flask
+flask-login
+blinker
+flask-oauth2-login
+flask-bootstrap

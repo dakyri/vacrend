@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+	{% if session.logged_in %} {# i.e. logged in and with non-zero rights #}
+	<div class="main-panel">
+		<form action="{{ url_for('add') }}" method="post" class="add-entry">
+			<div>
+			  <label id="startDateLabel" for="startDate">Start Date</label>
+			  <input type="date" id="startDate" name="startDate">
+			  <label id="endDateLabel" for="endDate">End Date</label>
+			  <input type="date" id="endDate" name="endDate">
+			  <input type="submit" value="Add">
+			</div>
+		</form>
+	</div>
+	{% endif %}
+	<div class="main-panel">
+	{% if entries %}
+		{% for entry in entries %}
+			<div class="row db-entry">
+				From {{ entry.start_date }} to {{ entry.end_date }}: Status
+				{% if entry.approved > 0 %}<span class="positive">Approved</span>{%
+				 elif entry.approved < 0 %}<span class="negative">Disapproved</span>{%
+				 else %}<span class="neutral">Pending</span>{% endif %}
+			</div>
+		{% endfor %}
+	{% else %}
+		<em>Unbelievable!  No vacation requests so far!</em>
+	{% endif %}
+	</div>
+{% endblock %}

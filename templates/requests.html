@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+	{% if session.logged_in and session.logged_in >= 2 %} {# i.e. logged in and with non-zero rights #}
+		<div class="main-panel">
+		{% if entries %}
+			{% for entry in entries %}
+				<div class="row db-entry">
+					For {{ entry.user_id }} from {{ entry.start_date }} to {{ entry.end_date }}: Status
+					{% if entry.approved > 0 %}<span class="positive">Approved</span>{%
+					 elif entry.approved < 0 %}<span class="negative">Disapproved</span>{%
+					 else %}<span class="neutral">Pending</span>{% endif %}
+				</div>
+			{% endfor %}
+		{% else %}
+			<em>No current vacation requests!</em>
+		{% endif %}
+		</div>
+	{% endif %}
+{% endblock %}

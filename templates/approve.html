@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+	{% if session.logged_in and session.logged_in >= 2 %} {# i.e. logged in and with non-zero rights #}
+		<div class="main-panel">
+		{% if entries %}
+			<form action="{{ url_for('approve') }}" method="post" class="approve-entry">
+			{% for entry in entries %}
+				<div class="row db-entry">
+					For {{ entry.user_id }} from {{ entry.start_date }} to {{ entry.end_date }}: <label>Status</label>
+					<select name="req.{{ entry.id }}">
+						<option value="1" {% if entry.approved > 0 %}selected{% endif %}>approved</option>
+						<option value="0" {% if entry.approved == 0 %}selected{% endif %}>pending</option>
+						<option value="-1" {% if entry.approved < 0 %}selected{% endif %}>disapproved</option>
+					</select>
+				</div>
+			{% endfor %}
+				<input type="submit" value="Submit">
+			</form>
+		{% else %}
+			<em>All vacation requests have been approved!</em>
+		{% endif %}
+		</div>
+	{% endif %}
+{% endblock %}
