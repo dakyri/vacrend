@@ -1,7 +1,7 @@
 import os
 import sys
 import click
-from flask import Flask, g, jsonify, session, render_template, request, flash
+from flask import Flask, g, jsonify, session, render_template, request, flash, redirect
 from sqlite3 import dbapi2 as sqlite3
 from flask_oauth2_login import GoogleLogin
 from flask_bootstrap import Bootstrap
@@ -33,10 +33,10 @@ def login_success(token, profile):
 
     if (not gid):
         flash("Expected google id in login response", "error")
-        return render_template('main.html', login_url=google_login.authorization_url());  
+        return render_template('main.html');  
     print("Trying to login as "+gid, file=sys.stderr)
     if (not set_login(gid)):
-        return render_template('main.html', login_url=google_login.authorization_url());
+        return render_template('main.html');
     print("Successfully logged in as "+gid, file=sys.stderr)
     return render_view_command(gid)
 
@@ -45,7 +45,7 @@ def login_failure(e):
     """Actions taken on a failed login """
     set_logout()
     flash(str(e), "error")
-    return render_template('main.html', login_url=google_login.authorization_url());  
+    return render_template('main.html');  
 
 def set_logout():
     """Clear record of user id from our session """
@@ -233,7 +233,7 @@ def index():
     if (logged_in):
         return render_view_command(session.get('logged_in_gid', None))
     else:
-        return render_template('main.html', login_url=google_login.authorization_url())
+        return render_template('main.html')
 
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -254,7 +254,7 @@ def add():
             return render_view_command(gid)
     else:
         flash("you must login first", "error")
-        return render_template('main.html', login_url=google_login.authorization_url())
+        return render_template('main.html')
 
 
 @app.route('/approve', methods=['GET', 'POST'])
@@ -288,7 +288,7 @@ def approve():
         return render_approve_command(0)
     else:
         flash("you must login as an admin first", "error")
-        return render_template('main.html', login_url=google_login.authorization_url())
+        return render_template('main.html')
 
 @app.route('/requests', methods=['GET', 'POST'])
 def requests():
@@ -298,7 +298,7 @@ def requests():
         return render_requests_command()
     else:
         flash("you must login as an admin first", "error")
-        return render_template('main.html', login_url=google_login.authorization_url())
+        return render_template('main.html')
 
 @app.route('/users', methods=['GET', 'POST'])
 def users():
@@ -309,7 +309,7 @@ def users():
         return render_users_command()
     else:
         flash("you must login as an admin first", "error")
-        return render_template('main.html', login_url=google_login.authorization_url())
+        return render_template('main.html')
     
 @app.route('/logout')
 def logout():
@@ -320,7 +320,12 @@ def logout():
         set_logout()
         if (gid):
             flash("Successfully logged out "+gid)
-    return render_template('layout.html', login_url=google_login.authorization_url())
+    return render_template('layout.html')
+
+@app.route('/login')
+def login():
+    return redirect(google_login.authorization_url(), 302)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

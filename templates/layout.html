@@ -35,7 +35,7 @@
 			{% endif %}              
             <li>
               {% if not session.logged_in %}
-				<a href="{% if login_url %}{{ login_url }}{% else %}/{% endif %}">Login</a>
+				<a href="{% if login_url %}{{ login_url }}{% else %}/login{% endif %}">Login</a>
 			  {% else %}
 				<a href="{{ url_for('logout') }}">Logout {{ session.logged_in_gid }}</a>
 			  {% endif %}      
