@@ -20,5 +20,12 @@
 			<em>All vacation requests have been approved!</em>
 		{% endif %}
 		</div>
+		<div class="main-panel">
+			<form action="{{ url_for('useradd') }}" method="post" class="approve-entry">
+				<label id="userIdLabel" for="userId">User Id</label>
+			  	<input type="text" id="userId" name="userId">
+				<input type="submit" value="Add user">
+			</form>
+		</div>
 	{% endif %}
 {% endblock %}

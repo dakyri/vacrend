@@ -302,6 +302,17 @@ def requests():
         flash("you must login as an admin first", "error")
         return render_template('main.html')
 
+@app.route('/useradd', methods=['GET', 'POST'])
+def useradd():
+    print(request, file=sys.stderr)
+    logged_in = session.get('logged_in', 0)
+    if (logged_in >= 2):
+# handle any requests to modify the users here
+        return render_users_command()
+    else:
+        flash("you must login as an admin first", "error")
+        return render_template('main.html')
+    
 @app.route('/users', methods=['GET', 'POST'])
 def users():
     print(request, file=sys.stderr)
