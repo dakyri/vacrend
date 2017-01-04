@@ -26,6 +26,8 @@ app.config.from_envvar('VACREND_SETTINGS', silent=True)
 
 google_login = GoogleLogin(app)
 
+mock_login = True
+
 @google_login.login_success
 def login_success(token, profile):
     """Actions taken on a successul login. Will try to verify the login to a local user database with specific rights"""
@@ -324,6 +326,13 @@ def logout():
 
 @app.route('/login')
 def login():
+    if (mock_login):
+        flash("Mock login")
+        mock_id = "dakyri@gmail.com"
+        session['logged_in_id'] = 2       
+        session['logged_in_gid'] = mock_id     
+        session['logged_in'] = 2 # 0=a viewing user, 1=an editting user, 2=an admin user
+        return render_view_command(mock_id);
     return redirect(google_login.authorization_url(), 302)
 
 
